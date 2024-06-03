@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/background.webp") }}');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .header {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'UnifrakturMaguntia', cursive;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .upload-box {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid white;
+            position: fixed;
+            top: 100px;
+            z-index: 999;
+        }
+        .images-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 250px; /* Увеличено смещение для сетки, чтобы не перекрывать загрузочный бокс */
+        }
+        .image-box {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 10px;
+            flex: 0 1 calc(20% - 20px); /* По пять элементов в строке */
+            box-sizing: border-box;
+        }
+        .image-box img {
+            width: 224px;  /* Установка ширины */
+            height: 224px; /* Установка высоты */
+            border-radius: 10px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid white;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        input[type="submit"] {
+            margin: 10px 0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid white;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        .history {
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid white;
+            margin-bottom: 100px; /* Добавлено нижнее поле, чтобы история не перекрывала другие элементы */
+        }
+        .history h2 {
+            margin: 0 0 10px 0;
+        }
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history ul li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    Upload Image
+</div>
+<div class="upload-box">
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file"><br>
+        <input type="submit" value="Upload">
+    </form>
+</div>
+{% if uploaded_files %}
+<div class="images-grid">
+    {% for file in uploaded_files %}
+    <div class="image-box">
+        <img src="{{ url_for('static', filename='uploads/' ~ file) }}" alt="Uploaded Image">
+        <p>Блюдо</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="history" style="margin-top: 500px;">
+    <h2>Upload History</h2>
+    <ul>
+        {% for file in uploaded_files %}
+        <li>{{ file }}</li>
+        {% endfor %}
+    </ul>
+    <form method="post" action="{{ url_for('clear_history') }}">
+        <input type="submit" value="Clear History">
+    </form>
+</div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+</body>
+</html>
