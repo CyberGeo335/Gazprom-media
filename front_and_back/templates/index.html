@@ -44,7 +44,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 250px; /* Увеличено смещение для сетки, чтобы не перекрывать загрузочный бокс */
+            margin-top: 250px;
         }
         .image-box {
             background-color: rgba(0, 0, 0, 0.5);
@@ -52,12 +52,12 @@
             border-radius: 15px;
             text-align: center;
             margin: 10px;
-            flex: 0 1 calc(20% - 20px); /* По пять элементов в строке */
+            flex: 0 1 calc(20% - 20px);
             box-sizing: border-box;
         }
         .image-box img {
-            width: 224px;  /* Установка ширины */
-            height: 224px; /* Установка высоты */
+            width: 224px;
+            height: 224px;
             border-radius: 10px;
         }
         input[type="file"] {
@@ -87,7 +87,7 @@
             border-radius: 15px;
             text-align: center;
             border: 2px solid white;
-            margin-bottom: 100px; /* Добавлено нижнее поле, чтобы история не перекрывала другие элементы */
+            margin-bottom: 100px;
         }
         .history h2 {
             margin: 0 0 10px 0;
@@ -113,10 +113,10 @@
 </div>
 {% if uploaded_files %}
 <div class="images-grid">
-    {% for file in uploaded_files %}
+    {% for file, predicted_class in uploaded_files %}
     <div class="image-box">
         <img src="{{ url_for('static', filename='uploads/' ~ file) }}" alt="Uploaded Image">
-        <p>Блюдо</p>
+        <p>Класс: {{ predicted_class }}</p>
     </div>
     {% endfor %}
 </div>
@@ -124,8 +124,8 @@
 <div class="history" style="margin-top: 500px;">
     <h2>Upload History</h2>
     <ul>
-        {% for file in uploaded_files %}
-        <li>{{ file }}</li>
+        {% for file, predicted_class in uploaded_files %}
+        <li>{{ file }} - Класс: {{ predicted_class }}</li>
         {% endfor %}
     </ul>
     <form method="post" action="{{ url_for('clear_history') }}">
